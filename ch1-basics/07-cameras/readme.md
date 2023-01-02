@@ -1,4 +1,6 @@
 # Three.js Journey
+## 07 - lesson: Cameeras
+OrtographicCamera and PerspectiveCamera explanation
 
 ## Setup
 Download [Node.js](https://nodejs.org/en/download/).
