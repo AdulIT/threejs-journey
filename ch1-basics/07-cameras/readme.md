@@ -16,3 +16,9 @@ npm run dev
 # Build for production in the dist/ directory
 npm run build
 ```
+
+### Field of view - fov
+fov - it's the vertical field of view, not ----------
+
+### Aspect ratio
+It's the render width divided by rehder height
