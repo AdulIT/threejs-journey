@@ -1,6 +1,9 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'lil-gui'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
+
 
 /**
  * Base
@@ -13,6 +16,81 @@ const canvas = document.querySelector('canvas.webgl')
 
 // Scene
 const scene = new THREE.Scene()
+
+/**
+ * Models
+ */
+const dracoLoader = new DRACOLoader()
+dracoLoader.setDecoderPath('/draco/')
+
+const gltfLoader = new GLTFLoader()
+gltfLoader.setDRACOLoader(dracoLoader)
+
+let mixer = null
+
+gltfLoader.load(
+    '/models/Fox/glTF/Fox.gltf',
+    (gltf) =>
+    {
+        mixer = new THREE.AnimationMixer(gltf.scene)
+        const action = mixer.clipAction(gltf.animations[0])
+
+        action.play()
+
+        console.log(action)
+
+        gltf.scene.scale.set(0.025, 0.025, 0.025)
+        scene.add(gltf.scene)
+    }
+)
+
+// Binary
+// gltfLoader.load(
+//     '/models/Duck/glTF-Binary/Duck.glb',
+//     (gltf) =>
+//     {
+//         scene.add(gltf.scene.children[0])
+//     }
+// )
+
+// Draco
+// gltfLoader.load(
+//     '/models/Duck/glTF-Draco/Duck.gltf',
+//     (gltf) =>
+//     {
+//         scene.add(gltf.scene)
+//     }
+// )
+
+// Embeddded
+// gltfLoader.load(
+//     '/models/FlightHelmet/glTF/FlightHelmet.gltf',
+//     (gltf) =>
+//     {
+//         // console.log(gltf)
+
+//         // for (const child of gltf.scene.children)
+//         // {
+//         //     scene.add(child)
+//         // } it is not working
+
+//         // while (gltf.scene.children.length)
+//         // {
+//         //     scene.add(gltf.scene.children[0])
+//         // }
+
+//         // const children = [...gltf.scene.children]
+
+//         // for (const child of children)
+//         // {
+//         //     scene.add(child)
+//         // }
+
+//         console.log(gltf.scene)
+
+//         scene.add(gltf.scene)
+//     }
+// )
 
 /**
  * Floor
@@ -105,6 +183,11 @@ const tick = () =>
     const deltaTime = elapsedTime - previousTime
     previousTime = elapsedTime
 
+    // Update mixer
+    if (mixer !== null)
+    {
+        mixer.update(deltaTime)
+    }
     // Update controls
     controls.update()
 
